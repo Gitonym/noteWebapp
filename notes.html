@@ -5,9 +5,242 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notizen</title>
-    <link rel="stylesheet" href="./notes.css">
 </head>
-<style></style>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --listCol: rgb(224, 194, 205);
+    --noteCol: rgb(255, 219, 182);
+    --noteColLight: rgb(255, 229, 203);
+    --white: whitesmoke;
+    --black: rgb(102, 102, 102);
+    --green: rgb(195, 224, 149);
+    --yellow: rgb(255, 233, 148);
+    --red: rgb(255, 166, 166);
+
+    --topMargin: 4rem;
+    --sideMargin: min(5rem, 5vw)
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: sans-serif;
+}
+
+#listNoteGrid {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: max(min(25%, 20rem), 15rem) auto;
+    grid-template-rows: 100%;
+    grid-template-areas: 'list note';
+}
+
+#list {
+    grid-area: list;
+    background-color: var(--listCol);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    color: var(--white);
+    padding: 1rem;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 200%;
+}
+
+.listTitle {
+    margin-top: var(--topMargin);
+    margin-bottom: var(--topMargin);
+    display: relative;
+}
+
+.listItem {
+    font-size: 1.5rem;
+    padding: 0.5em;
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: 1em;
+    cursor: default;
+}
+
+.note {
+    grid-area: note;
+    background-color: var(--noteCol);
+    overflow-y: scroll;
+    color: var(--black);
+    overflow-wrap: break-word;
+    padding: var(--sideMargin);
+    padding-top: 0;
+}
+
+#noteTitle {
+    font-size: 3rem;
+    margin-top: var(--topMargin);
+    margin-bottom: var(--topMargin);
+    position: relative;
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+    background-color: var(--noteCol);
+}
+
+#noteContent {
+    font-size: 1.2rem;
+    max-width: 40rem;
+    line-height: 140%;
+}
+
+.toolContainer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tool {
+    color: var(--black);
+    font-size: 3rem;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    margin-right: 2rem;
+    cursor: pointer;
+    line-height: 0%;
+    user-select: none;
+}
+
+#add {
+    background-color: var(--green);
+}
+
+#edit {
+    background-color: var(--yellow);
+}
+
+#delete {
+    background-color: var(--red);
+}
+
+#addPage, #editPage {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--noteCol);
+    position: fixed;
+    top: -100%;
+    right: 0;
+    transition: transform 0.8s ease-in-out;
+}
+
+#save, #saveEditButton {
+    background-color: var(--green);
+    border: none;
+}
+
+#closeAddPage, #closeEditPage {
+    position: absolute;
+    top: 0.5rem;
+    right: 2rem;
+    font-size: 3rem;
+    color: var(--black);
+    cursor: pointer;
+    user-select: none;
+}
+
+#newTitle, #editedTitle {
+    margin-top: var(--topMargin);
+    margin-left: var(--sideMargin);
+    margin-right: var(--sideMargin);
+    font-size: 3rem;
+    width: calc(100% - 2 * var(--sideMargin));
+    color: var(--black);
+    border: none;
+    background-color: var(--noteColLight);
+    border-radius: 1em;
+    padding-left: 0.5em;
+}
+
+#newContent, #editedContent {
+    margin-top: var(--topMargin);
+    margin-left: var(--sideMargin);
+    width: calc(100% - 2 * var(--sideMargin));
+    color: var(--black);
+    font-size: 1.2rem;
+    border: none;
+    background-color: var(--noteColLight);
+    border-radius: 1em;
+    padding: 0.5em;
+}
+
+@keyframes squish {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+    30% {
+        transform: scale3d(0.75, 1.25, 1);
+    }
+    40% {
+        transform: scale3d(1.25, 0.75, 1);
+    }
+    50% {
+        transform: scale3d(0.85, 1.15, 1);
+    }
+    65% {
+        transform: scale3d(1.05, 0.95, 1);
+    }
+    75% {
+        transform: scale3d(0.95, 1.05, 1);
+    }
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+@keyframes wobble {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0);
+        transform-origin: 50% 50%;
+    }
+    15% {
+        transform: translateY(-15px) rotate(-3deg);
+    }
+    30% {
+        transform: translateY(7px) rotate(3deg);
+    }
+    45% {
+        transform: translateY(-7px) rotate(-1.8deg);
+    }
+    60% {
+        transform: translateY(4px) rotate(1.2deg);
+    }
+    75% {
+        transform: translateY(-3px) rotate(-0.6deg);
+    }
+}
+</style>
 <body>
     <div id="listNoteGrid">
         <div id="list">
@@ -39,8 +272,323 @@
             <button type="submit" class="tool" id="saveEditButton">&#128427;</button>
         </div>
     </form>
-    <script src="./all.js"></script>
-    <script src="./sound.js"></script>
-    <script src="./indexedDB.js"></script>
+    <script>
+        const addButton = document.getElementById('add');
+        const noteTitle = document.getElementById('noteTitle');
+        const listNoteGrid = document.getElementById('listNoteGrid');
+        const noteTitleArrow = document.getElementById('noteTitleArrow');
+        const addPage = document.getElementById('addPage');
+        let listItems = document.getElementsByClassName('listItem');
+        const editButton = document.getElementById('edit');
+        const deleteButton = document.getElementById('delete');
+        const closeAddPageButton = document.getElementById('closeAddPage');
+        const saveButton = document.getElementById('save');
+        const newTitle = document.getElementById('newTitle');
+        const newContent = document.getElementById('newContent');
+        const list = document.getElementById('list');
+        const noteContent = document.getElementById('noteContent');
+        const editPage = document.getElementById('editPage');
+        const closeEditPageButton = document.getElementById('closeEditPage');
+        const saveEditButton = document.getElementById('saveEditButton');
+        const editedContent = document.getElementById('editedContent');
+        const editedTitle = document.getElementById('editedTitle');
+
+        let collapsed = false;
+
+        //---------------------EVENTLISTENERS-----------------------------------------------
+
+        //close edit page
+        closeEditPageButton.addEventListener('click', (e) => {
+            editPage.style.transform = 'TranslateY(0)';
+        })
+
+        //collapse/expand list
+        noteTitle.addEventListener('click', collapseExpandList);
+
+        //saveButton Animations
+        saveButton.addEventListener('click', playClickAnimation);
+
+        //addPageCloseButton ANimations
+        closeAddPageButton.addEventListener('click', playClickAnimation);
+
+        //toolAnimations
+        addButton.addEventListener('click', playClickAnimation);
+        editButton.addEventListener('click', playClickAnimation);
+        deleteButton.addEventListener('click', playClickAnimation);
+
+        //discard new note
+        closeAddPageButton.addEventListener('click', closeAddPage);
+        //create new note
+        addButton.addEventListener('click', openNewAddPage);
+
+        //------------------------FUNCTIONS-------------------------------------------------
+
+        function openNewAddPage() {
+            addPage.style.transform = 'translateY(100%)';
+            newTitle.value = '';
+            newContent.value = '';
+        }
+
+        function closeAddPage() {
+            addPage.style.transform = 'translateY(0)';
+        }
+
+        //hover aniation
+        function playHoverAnimation() {
+            this.style.animation = 'none';
+            this.offsetHeight;
+            this.style.animation = 'wobble 0.8s ease-in-out';
+        }
+
+        //click animation
+        function playClickAnimation() {
+            this.style.animation = 'none';
+            this.offsetHeight;
+            this.style.animation = 'squish 0.8s ease-in-out';
+        }
+
+
+
+        function collapseExpandList() {
+            if (collapsed) {
+                listNoteGrid.style.gridTemplateColumns = 'max(min(25%, 20rem), 15rem) auto';
+                noteTitleArrow.innerHTML = '&#8612;';
+            } else {
+                listNoteGrid.style.gridTemplateColumns = '0 100%';
+                noteTitleArrow.innerHTML = '&#8614;';
+            }
+            collapsed = !collapsed;
+        }
+    </script>
+    <script>
+        const IDB = (function init(){
+            let db = null;
+            let objectStore = null;
+            let DBOpenReq = indexedDB.open('NotesDB', 1);
+
+            DBOpenReq.addEventListener('error', (err) => {
+                console.warn(err);
+            });
+
+            DBOpenReq.addEventListener('success', (ev) => {
+                db = ev.target.result;
+                console.log('success', db)
+                buildList();
+            });
+
+            //executes when new version is detected.
+            //DDL only here possible
+            DBOpenReq.addEventListener('upgradeneeded', (ev) => {
+                db = ev.target.result;
+                console.log(`database upgraded from version ${ev.oldVersion} to version ${ev.newVersion}`)
+                console.log('upgrade', db)
+
+                //only create objectStore 'Notizen' if it doesent already exist
+                if (!db.objectStoreNames.contains('Notizen')){
+                    objectStore = db.createObjectStore('Notizen', {
+                        keyPath: 'id',
+                        autoIncrement: 'true'
+                    });
+                }
+            });
+
+            //---------------delete note--------------------------------------------------------------------------------
+            deleteButton.addEventListener('click', (e) => {
+                let selectedItems = document.getElementsByClassName('selected');
+                if (selectedItems.length > 0) {
+                    let tx = makeTX('Notizen', 'readwrite');
+                    tx.oncomplete =  (e) => {
+                        console.log(e);
+                    }
+                    let store = tx.objectStore('Notizen');
+                    let request = store.delete(parseInt(selectedItems[0].firstElementChild.textContent));
+                    request.onsuccess = (e) => {
+                        clearList();
+                        buildList();
+                        clearNote();
+                    }
+                    request.onerror = (err) => {
+                        console.warn(err);
+                    }
+                } else {
+                    console.log('No item is selected');
+                }
+            });
+
+            //----------------open edit page----------------------------------------------------------------------------
+            editButton.addEventListener('click', (e) => {
+                let selected = document.getElementsByClassName('selected');
+                if (selected.length > 0) {
+                    selected = selected[0]
+
+                    let tx = makeTX('Notizen', 'readonly');
+                    tx.oncomplete = (e) => {
+
+                    }
+                    let store = tx.objectStore('Notizen');
+                    let request = store.get(parseInt(selected.firstElementChild.textContent));
+                    request.onsuccess = (e) => {
+                        console.log();
+                        editedContent.value = e.target.result.inhalt;
+                        editedTitle.value = e.target.result.titel;
+                        editPage.style.transform = 'TranslateY(100%)';
+                    }
+                    request.onerror = (err) => {
+                        console.warn(err);
+                    }
+                }
+            });
+
+            //-----------------Save edit---------------------------------------
+            saveEditButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                let selected = document.getElementsByClassName('selected');
+                if (selected.length > 0) {
+                    selected = selected[0]
+
+                    let tx = makeTX('Notizen', 'readwrite');
+                    tx.oncomplete = (e) => {
+
+                    }
+                    let store = tx.objectStore('Notizen');
+                    let request = store.put({
+                        id: parseInt(selected.firstElementChild.textContent),
+                        titel: editedTitle.value,
+                        inhalt: editedContent.value,
+                        erstellt: Date.now()
+                    });
+                    request.onsuccess = (e) => {
+                        editPage.style.transform = 'translateY(0)';
+                        clearList();
+                        buildList();
+                        clearNote();
+                    }
+                    request.onerror = (err) => {
+                        console.warn(err);
+                    }
+                }
+            });
+
+            //---------------save new note------------------------------------------------------------------------------
+            addPage.addEventListener('submit', saveNewNote);
+
+            function saveNewNote(e) {
+                e.preventDefault(); //stop default behaviour of form. prevents the page from refreshing.
+                addPage.style.transform = 'translateY(0)';
+                let title = newTitle.value.trim();
+                let content = newContent.value.trim();
+                let createdAt = Date.now();
+
+                let newNote = {
+                    titel: title,
+                    inhalt: content,
+                    erstellt: createdAt
+                }
+
+                //transaction for submitting the new data to the store
+                let tx = makeTX('Notizen', 'readwrite');
+
+                tx.oncomplete = (e) => {
+                    console.log(e);
+                }
+
+                let store = tx.objectStore('Notizen');
+                let request = store.add(newNote)
+
+                request.onsuccess = (e) => {
+                    console.log('Added new Note');
+                    clearList();
+                    buildList();
+                }
+                request.onerror = (err) => {
+                    console.warn(err);
+                }
+            }
+
+            function makeTX(storeName, mode, ) {
+                let tx = db.transaction(storeName, mode);
+                tx.onerror = (err) => {
+                    console.warn(err);
+                }
+                return tx;
+            }
+
+            function clearList() {
+                list.innerHTML = '<div class="listTitle">Notizen</div>';
+            }
+
+            function buildList() {
+                list.innerHTML = '<div class="listTitle">Lade...</div>';
+
+                let tx = makeTX('Notizen', 'readonly');
+                tx.oncomplete = (e) => {
+                    // the whole transaction is complete
+                }
+                let store = tx.objectStore('Notizen');
+                let getReq = store.getAll();
+
+                getReq.onsuccess = (e) => {
+                    //getAll was succesfull
+                    list.innerHTML = '<div class="listTitle">Notizen</div>';
+                    for (let i = 0; i < e.target.result.length; i++) {
+                        list.insertAdjacentHTML('beforeend', `<div class="listItem">${e.target.result[i].titel}<div style='display: none;'>${e.target.result[i].id}</div></div>`);
+                    }
+                    let listItems = document.getElementsByClassName('listItem');
+                    //generate new event listeners
+                    for (let i = 0; i < listItems.length; i++) {
+                        listItems[i].addEventListener('click', switchItem);
+                        listItems[i].addEventListener('click', playClickAnimation);
+                    }
+                }
+
+                getReq.onerror = (err) => {
+                    console.warn(err);
+                }
+            }
+
+            function switchItem() {
+                for (let i = 0; i < listItems.length; i++) {
+                    listItems[i].classList.remove('selected');
+                }
+                this.classList.add('selected');
+                console.log(this.firstElementChild.textContent);
+
+                let tx = makeTX('Notizen', 'readonly');
+                tx.oncomplete = (e) => {
+
+                }
+                let store = tx.objectStore('Notizen');
+                let getReq = store.get(parseInt(this.firstElementChild.textContent));
+
+                getReq.onsuccess = (e) => {
+                    console.log(e.target.result)
+                    noteTitle.innerHTML = '<span id="noteTitleArrow" style="user-select: none;">&#8612;</span>';
+                    noteTitle.insertAdjacentText('beforeend', e.target.result.titel);
+                    noteContent.innerText = e.target.result.inhalt;
+                }
+
+                getReq.onerror = (err) => {
+                    console.warn(err);
+                }
+
+            }
+
+            function clearNote() {
+                //delete text of noteTitle without affecting its children and their text
+                let child = noteTitle.firstChild
+                let nextChild;
+
+                while (child) {
+                nextChild = child.nextSibling;
+                if (child.nodeType === 3) {
+                    noteTitle.removeChild(child);
+                }
+                child = nextChild;
+                }
+
+                noteContent.textContent = '';
+            }
+        })();
+    </script>
 </body>
 </html>
