@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notizen</title>
+    <link rel="stylesheet" href="./notes.css">
+</head>
+<style></style>
+<body>
+    <div id="listNoteGrid">
+        <div id="list">
+            <div class="listTitle">Notizen</div>
+        </div>
+        <div class="note">
+            <div id="noteTitle"><span id="noteTitleArrow" style="user-select: none;">&#8612;</span></div>
+            <div id="noteContent"></div>
+        </div>
+    </div>
+    <div class="toolContainer">
+        <div class="tool" id="add">&#10010;</div>
+        <div class="tool" id="edit">&#9874;</div>
+        <div class="tool" id="delete">&#10539;</div>
+    </div>
+    <form id="addPage" action="">
+        <div id="closeAddPage">&#10539;</div>
+        <input required type="text" id="newTitle" placeholder="Neuer Titel"> <br>
+        <textarea id="newContent" cols="30" rows="10" placeholder="Neue Notiz..."></textarea> <br>
+        <div class="toolContainer">
+            <button type="submit" class="tool" id="save">&#128427;</button>
+        </div>
+    </form>
+    <form id="editPage" action="">
+        <div id="closeEditPage">&#10539;</div>
+        <input required type="text" id="editedTitle"> <br>
+        <textarea id="editedContent" cols="30" rows="10"></textarea> <br>
+        <div class="toolContainer">
+            <button type="submit" class="tool" id="saveEditButton">&#128427;</button>
+        </div>
+    </form>
+    <script src="./all.js"></script>
+    <script src="./sound.js"></script>
+    <script src="./indexedDB.js"></script>
+</body>
+</html>
